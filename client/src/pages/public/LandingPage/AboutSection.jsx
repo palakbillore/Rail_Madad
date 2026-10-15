@@ -116,10 +116,8 @@ export default function AboutSection() {
           </h2>
 
           <p className="text-slate-500 text-lg leading-relaxed max-w-3xl mx-auto mt-6">
-            Rail Madad is a modern grievance redressal
-            platform designed to improve passenger support,
-            complaint resolution, and citizen accessibility
-            across Indian Railways.
+            Everything a passenger needs to raise, track and
+            resolve a railway grievance, in one place.
           </p>
         </div>
 
@@ -195,27 +193,6 @@ export default function AboutSection() {
               <p className="relative z-10 text-slate-500 leading-relaxed text-sm">
                 {feature.desc}
               </p>
-
-              {/* FOOTER TAG */}
-
-              <div className="relative z-10 mt-8 flex items-center gap-2">
-                
-                <div
-                  className="size-2 rounded-full"
-                  style={{
-                    background: GOV_ORANGE,
-                  }}
-                />
-
-                <span
-                  className="text-xs font-bold uppercase tracking-[0.14em]"
-                  style={{
-                    color: GOV_NAVY,
-                  }}
-                >
-                  Rail Madad Service
-                </span>
-              </div>
             </div>
           ))}
         </div>

@@ -74,42 +74,27 @@ export default function HeroSection() {
             {/* HEADING */}
 
             <h1
-              className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight"
-              style={{
-                color: '#0f172a',
-              }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight"
+              style={{ color: '#0f172a' }}
             >
-              Rail Madad
+              Railway complaints,
               <br />
-
-              <span
-                className="text-transparent bg-clip-text"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, ${GOV_NAVY}, #3d6cb1)`,
-                }}
-              >
-                Grievance
-              </span>
-
-              <br />
-
               <span
                 className="text-transparent bg-clip-text"
                 style={{
                   backgroundImage: `linear-gradient(135deg, ${GOV_ORANGE}, #ff9b52)`,
                 }}
               >
-                Redressal Portal
+                resolved faster.
               </span>
             </h1>
 
             {/* SUBTEXT */}
 
             <p className="text-base sm:text-lg text-slate-500 leading-relaxed mt-7 max-w-2xl mx-auto lg:mx-0">
-              A modern citizen-first railway grievance platform
-              for Indian Railways. File complaints, upload
-              evidence, track complaint status, and receive
-              intelligent assistance through Rail Sahayak.
+              File a complaint, attach evidence and follow its
+              status until it is resolved. Rail Sahayak, our
+              multilingual AI assistant, guides you at every step.
             </p>
 
             {/* ACTION BUTTONS */}
@@ -156,68 +141,6 @@ export default function HeroSection() {
                 Track Complaint
               </button>
             </div>
-
-            {/* QUICK STATS */}
-
-            <div className="grid grid-cols-3 gap-4 mt-12">
-              {[
-                {
-                  value: '24×7',
-                  label: 'Support',
-                  icon: 'support_agent',
-                },
-
-                {
-                  value: 'AI',
-                  label: 'Powered',
-                  icon: 'smart_toy',
-                },
-
-                {
-                  value: 'Fast',
-                  label: 'Resolution',
-                  icon: 'bolt',
-                },
-              ].map(({ value, label, icon }) => (
-                <div
-                  key={label}
-                  className="rounded-2xl p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-[2px]"
-                  style={{
-                    background: '#fff',
-                    border: '1px solid #e5eaf2',
-                  }}
-                >
-                  <div
-                    className="size-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                    style={{
-                      background: '#eef3fb',
-                    }}
-                  >
-                    <Icon
-                      name={icon}
-                      fill
-                      size="text-xl"
-                      style={{
-                        color: GOV_NAVY,
-                      }}
-                    />
-                  </div>
-
-                  <p
-                    className="text-2xl font-bold"
-                    style={{
-                      color: GOV_NAVY,
-                    }}
-                  >
-                    {value}
-                  </p>
-
-                  <p className="text-xs text-slate-500 mt-1">
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* RIGHT VISUAL */}
@@ -248,52 +171,6 @@ export default function HeroSection() {
                   '1px solid rgba(255,255,255,0.6)',
               }}
             >
-              {/* HEADER */}
-
-              <div
-                className="flex items-center justify-between px-6 py-4"
-                style={{
-                  background: GOV_NAVY,
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="size-10 rounded-xl flex items-center justify-center"
-                    style={{
-                      background:
-                        'rgba(255,255,255,0.12)',
-                    }}
-                  >
-                    <Icon
-                      name="train"
-                      fill
-                      size="text-xl"
-                      className="text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-white">
-                      Rail Madad
-                    </p>
-
-                    <p className="text-xs text-blue-200">
-                      Citizen Assistance Portal
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="px-3 py-1 rounded-full text-xs font-semibold"
-                  style={{
-                    background: GOV_ORANGE,
-                    color: '#fff',
-                  }}
-                >
-                  LIVE
-                </div>
-              </div>
-
               {/* IMAGE */}
 
               <div className="relative p-5">
@@ -394,40 +271,6 @@ export default function HeroSection() {
 
                 <p className="text-xs text-slate-500 mt-1">
                   Official Railway Support System
-                </p>
-              </div>
-            </div>
-
-            <div
-              className="hidden xl:flex absolute -right-10 bottom-10 rounded-2xl px-5 py-4 shadow-xl items-center gap-4"
-              style={{
-                background: '#fff',
-                border: '1px solid #e5eaf2',
-              }}
-            >
-              <div
-                className="size-12 rounded-xl flex items-center justify-center"
-                style={{
-                  background: '#fff4e8',
-                }}
-              >
-                <Icon
-                  name="bolt"
-                  fill
-                  size="text-xl"
-                  style={{
-                    color: GOV_ORANGE,
-                  }}
-                />
-              </div>
-
-              <div>
-                <p className="font-semibold text-slate-800">
-                  Faster Resolution
-                </p>
-
-                <p className="text-xs text-slate-500 mt-1">
-                  AI-assisted grievance workflow
                 </p>
               </div>
             </div>

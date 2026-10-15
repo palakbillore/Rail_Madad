@@ -169,10 +169,8 @@ export default function Footer() {
             {/* DESCRIPTION */}
 
             <p className="text-sm text-slate-300 leading-relaxed mt-6 max-w-md">
-              Rail Madad is a citizen-first railway
-              grievance redressal platform designed to
-              help passengers submit, track, and resolve
-              railway-related complaints efficiently.
+              Official grievance redressal platform of Indian
+              Railways, Government of India.
             </p>
 
             {/* BADGES */}
