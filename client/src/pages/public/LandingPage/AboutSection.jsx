@@ -118,7 +118,8 @@ export default function AboutSection() {
           </h2>
 
           <p className="text-slate-500 text-lg leading-relaxed max-w-3xl mx-auto mt-6">
-            {t('landing.aboutBody')}
+            Everything a passenger needs to raise, track and
+            resolve a railway grievance, in one place.
           </p>
         </div>
 
@@ -194,27 +195,6 @@ export default function AboutSection() {
               <p className="relative z-10 text-slate-500 leading-relaxed text-sm">
                 {t(`landing.${({ 'PNR Status': 'featurePnrDesc', 'File Complaints': 'featureFileDesc', 'AI Analysis': 'featureAiDesc', 'Rail Sahayak': 'featureAssistantDesc', 'Secure Access': 'featureSecureDesc', 'Cloud Uploads': 'featureCloudDesc' })[feature.title]}`)}
               </p>
-
-              {/* FOOTER TAG */}
-
-              <div className="relative z-10 mt-8 flex items-center gap-2">
-                
-                <div
-                  className="size-2 rounded-full"
-                  style={{
-                    background: GOV_ORANGE,
-                  }}
-                />
-
-                <span
-                  className="text-xs font-bold uppercase tracking-[0.14em]"
-                  style={{
-                    color: GOV_NAVY,
-                  }}
-                >
-                  {t('landing.service')}
-                </span>
-              </div>
             </div>
           ))}
         </div>
