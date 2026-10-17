@@ -36,6 +36,7 @@ const allowedOrigins = [
   "https://rail-madad-erp.vercel.app",
   "https://rail-madad-green.vercel.app",
   "https://rail-madad-delta.vercel.app",
+  "http://localhost:5173",
   
   process.env.FRONTEND_URL,
 ].filter(Boolean);

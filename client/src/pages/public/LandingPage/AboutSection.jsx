@@ -197,24 +197,7 @@ export default function AboutSection() {
 
               {/* FOOTER TAG */}
 
-              <div className="relative z-10 mt-8 flex items-center gap-2">
-                
-                <div
-                  className="size-2 rounded-full"
-                  style={{
-                    background: GOV_ORANGE,
-                  }}
-                />
-
-                <span
-                  className="text-xs font-bold uppercase tracking-[0.14em]"
-                  style={{
-                    color: GOV_NAVY,
-                  }}
-                >
-                  {t('landing.service')}
-                </span>
-              </div>
+              
             </div>
           ))}
         </div>

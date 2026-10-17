@@ -13,24 +13,22 @@ import { sendComplaintMail, sendStatusUpdateMail } from "../utils/sendMail.js";
 dotenv.config();
 
 export const submitComplaint = async (req, res) => {
-
-  console.log("ENV CHECK →", {
-    openrouter: process.env.OPENROUTER_API_KEY ? "loaded" : "MISSING",
-    mongo: process.env.MONGODB_URI ? "loaded" : "MISSING",
-    cloudinary: process.env.CLOUDINARY_API_KEY ? "loaded" : "MISSING",
-  });
+  const requestId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  const startedAt = Date.now();
+  const logStep = (step, details = {}) => console.log(
+    `[complaint:${requestId}] ${new Date().toISOString()} ${step}`,
+    Object.keys(details).length ? details : "",
+  );
 
   try {
     const { rawText, pnrNumber } = req.body;
     const files = req.files;
 
-    console.log("\n--- [DEBUG] NEW COMPLAINT SUBMISSION ---");
-    console.log("Raw Text:", rawText);
-    console.log("PNR Number:", pnrNumber);
-    console.log("Files Attached:", files ? files.length : 0);
+    logStep("submission started", { userId: req.user?.userId, hasText: Boolean(rawText?.trim()), fileCount: files?.length ?? 0, hasPnr: Boolean(pnrNumber) });
 
     // ── Validation ─────────────────────────────────────────────────────────
     if ((!files || files.length === 0) && !rawText) {
+      logStep("validation failed: no text or files");
       return errorResponse(
         res,
         "Please provide an image, video, audio or text",
@@ -43,51 +41,57 @@ export const submitComplaint = async (req, res) => {
     let firstImageUrl = null;
 
     if (files && files.length > 0) {
-      for (const file of files) {
-        const uploaded = await uploadToCloudinary(file.buffer, file.mimetype);
-        mediaFiles.push(uploaded);
-
-        if (!firstImageUrl && uploaded.type === "image") {
-          firstImageUrl = uploaded.url;
+      logStep("file upload started", { fileCount: files.length });
+      for (const [index, file] of files.entries()) {
+        logStep("uploading file", { file: index + 1, mimeType: file.mimetype, sizeBytes: file.size });
+        try {
+          const uploaded = await uploadToCloudinary(file.buffer, file.mimetype);
+          mediaFiles.push(uploaded);
+          logStep("file uploaded", { file: index + 1, type: uploaded.type });
+          if (!firstImageUrl && uploaded.type === "image") firstImageUrl = uploaded.url;
+        } catch (error) {
+          logStep("file upload failed", { file: index + 1, message: error.message });
+          throw error;
         }
       }
-
-      console.log(`[DEBUG] Cloudinary Upload Success: ${mediaFiles.length} files`);
-      if (firstImageUrl) console.log(`[DEBUG] Primary Image URL: ${firstImageUrl}`);
     }
+    logStep("file upload stage complete", { uploadedCount: mediaFiles.length, hasImage: Boolean(firstImageUrl) });
 
     // ── 2. AI — Categorize + Urgency (single call) ─────────────────────────
     let category = "Other";
     let urgency = "Low";
     let confidence = 0.5;
     let description = rawText || "";
+    let aiModel = process.env.OPENROUTER_MODEL || "google/gemma-4-26b-a4b-it:free";
 
     if (firstImageUrl) {
+      logStep("AI categorization started", { input: "image and text" });
       const aiResult = await categorizeComplaint(firstImageUrl, rawText || "");
       category = aiResult.category;
       urgency = aiResult.urgency;
       confidence = aiResult.confidence;
       description = aiResult.description;
+      aiModel = aiResult.model || aiModel;
     } else if (rawText) {
+      logStep("AI categorization started", { input: "text" });
       const aiResult = await categorizeComplaint(null, rawText);
       category = aiResult.category;
       urgency = aiResult.urgency;
       confidence = aiResult.confidence;
       description = aiResult.description;
+      aiModel = aiResult.model || aiModel;
     }
 
-    console.log("[DEBUG] AI Categorization Result:");
-    console.log(`  - Category: ${category}`);
-    console.log(`  - Urgency:  ${urgency}`);
-    console.log(`  - Confidence: ${confidence}`);
+    logStep("AI categorization complete", { category, urgency, confidence });
 
     // ── 3. Smart Department Routing ────────────────────────────────────────
     const departmentId = await getRoutedDepartment(category);
 
-    console.log(`[DEBUG] Routed to Department ID: ${departmentId}`);
+    logStep("department routing complete", { departmentId: String(departmentId) });
 
     // ── 4. Generate Unique Complaint ID ────────────────────────────────────
     const complaintId = generateComplaintId();
+    logStep("complaint ID generated", { complaintId });
 
     // ── 5. Save to MongoDB ─────────────────────────────────────────────────
     const newComplaint = await Complaint.create({
@@ -109,18 +113,19 @@ export const submitComplaint = async (req, res) => {
         },
       ],
       aiMetadata: {
-        model: "qwen/qwen3-vl-235b-a22b-thinking",
+        model: aiModel,
         confidence,
         description,
         processedAt: new Date(),
       },
     });
+    logStep("complaint saved", { complaintId: newComplaint.complaintId });
 
     const user = await User.findById(req.user.userId).select("firstName email");
+    logStep("submitter loaded", { found: Boolean(user) });
 
     await newComplaint.populate("department", "name");
-
-    console.log("[DEBUG] User Email:", user);
+    logStep("department details loaded");
 
     sendComplaintMail({
       to: user.email,
@@ -133,6 +138,7 @@ export const submitComplaint = async (req, res) => {
       status: newComplaint.status,
       createdAt: newComplaint.createdAt,
     });
+    logStep("confirmation email queued");
     // ── 6. Response ────────────────────────────────────────────────────────
     const responsePayload = {
       success: true,
@@ -147,12 +153,12 @@ export const submitComplaint = async (req, res) => {
       },
     };
 
-    console.log("\n[DEBUG] Final Response:");
-    console.log(JSON.stringify(responsePayload, null, 2));
+    logStep("response sent", { statusCode: 201, complaintId: newComplaint.complaintId, durationMs: Date.now() - startedAt });
 
     return res.status(201).json(responsePayload);
   } catch (error) {
-    console.error("Complaint submission error:", error);
+    logStep("submission failed", { message: error.message, durationMs: Date.now() - startedAt });
+    console.error(`[complaint:${requestId}] stack`, error.stack);
     return errorResponse(res, "Something went wrong", 500);
   }
 };

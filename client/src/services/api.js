@@ -3,7 +3,7 @@
  * Swap BASE_URL for production when deploying.
  */
 
-const BASE_URL ='https://rail-madad-2.onrender.com/api';
+const BASE_URL = 'http://localhost:8000/api';
 
 /**
  * Core request function with auth header injection.
